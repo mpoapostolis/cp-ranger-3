@@ -1,0 +1,21 @@
+{
+  "name": "cp-ranger-2d",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Κλιματικός/ή Ντετέκτιβ — bilingual (EL/EN) top-down climate-education RPG (Phaser 3 + TypeScript).",
+  "author": "mpoapostolis",
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "phaser": "^3"
+  }
+}

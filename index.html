@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="el">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Κλιματικός/ή Ντετέκτιβ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } } }
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="rotate">
+      <div class="rotate-icon">📱↻</div>
+      <p>Γύρνα τη συσκευή οριζόντια</p>
+      <p class="en">Please rotate your device to landscape</p>
+      <button id="cp-rotate-ignore" style="margin-top:16px;padding:10px 20px;border-radius:12px;font-size:14px;font-weight:bold;color:#fff;background:#10b981;border:none;cursor:pointer;pointer-events:auto;transition:background 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+        Παίξε οπωσδήποτε / Play anyway
+      </button>
+    </div>
+    <script>
+      document.getElementById('cp-rotate-ignore')?.addEventListener('click', () => {
+        document.body.classList.add('cp-ignore-rotate');
+        window.dispatchEvent(new Event('resize'));
+      });
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

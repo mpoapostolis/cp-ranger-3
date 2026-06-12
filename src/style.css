@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #141210;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  font-family: 'Chakra Petch', 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* mobile: αγνοεί τις μπάρες του browser */
+  overflow: hidden;
+}
+
+#app canvas {
+  display: block;
+  touch-action: none;
+}
+
+/* ════════════ Παιχνιδιάρικο DOM UI (κουμπιά + επιλογές) ════════════ */
+/* Τα transforms μπαίνουν στα INNER στοιχεία (.cp-btn/.cp-choice) — ΟΧΙ στο
+   wrapper που το positionάρει το Phaser — αλλιώς θα πετάγονταν εκτός θέσης. */
+
+@keyframes cp-pop {
+  from { opacity: 0; transform: scale(0.82); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes cp-rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes cp-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+@keyframes cp-correct {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+@keyframes cp-glow {
+  0%, 100% { box-shadow: 0 10px 26px -8px rgba(16, 185, 129, 0.45); }
+  50% { box-shadow: 0 12px 34px -6px rgba(16, 185, 129, 0.85); }
+}
+
+.cp-btn {
+  animation: cp-pop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+  transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+  position: relative;
+  overflow: hidden;
+}
+.cp-btn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.08);
+}
+.cp-btn:active {
+  transform: translateY(-1px) scale(0.96);
+}
+
+.cp-choice {
+  animation: cp-rise 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+  position: relative;
+  overflow: hidden;
+}
+.cp-choice:hover {
+  transform: translateY(-3px) scale(1.012);
+  box-shadow: 0 16px 32px -14px rgba(16, 185, 129, 0.55);
+}
+.cp-choice:active {
+  transform: scale(0.99);
+}
+.cp-choice.cp-wrong {
+  animation: cp-shake 0.42s ease both;
+}
+.cp-choice.cp-correct {
+  animation: cp-correct 0.5s ease both, cp-glow 1.2s ease-in-out 0.5s infinite;
+}
+.cp-badge {
+  transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.3, 1.5);
+}
+.cp-btn:focus-visible,
+.cp-choice:focus-visible {
+  outline: 3px solid #10b981;
+  outline-offset: 2px;
+}
+.cp-choice:hover .cp-badge {
+  transform: scale(1.14) rotate(-6deg);
+}
+
+@keyframes cp-confetti {
+  0% { transform: translateY(-8px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(170px) rotate(620deg); opacity: 0; }
+}
+.cp-confetti {
+  position: absolute;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-btn,
+  .cp-choice,
+  .cp-choice.cp-correct,
+  .cp-choice.cp-wrong,
+  .cp-confetti {
+    animation: none !important;
+  }
+}
+
+#rotate {
+  display: none;
+  position: fixed;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #141210;
+  color: #a8a29e;
+  font-family: 'Chakra Petch', system-ui, sans-serif;
+  text-align: center;
+  padding: 24px;
+  z-index: 9999;
+}
+
+#rotate .rotate-icon {
+  font-size: 56px;
+}
+
+#rotate p {
+  margin: 0;
+  font-size: 18px;
+}
+
+#rotate .en {
+  font-size: 14px;
+  color: #6b7e99;
+}
+
+/* Portrait/στενή αναλογία (κάτω από το ASPECT_MIN=1.3 → 13/10): δείξε «γύρνα τη
+   συσκευή», κρύψε το landscape παιχνίδι. Βασισμένο σε aspect (όχι px) ώστε να
+   πιάνει και tablets (π.χ. iPad portrait). */
+@media (orientation: portrait) and (max-aspect-ratio: 13 / 10) {
+  body:not(.cp-ignore-rotate) #app {
+    opacity: 0;
+    pointer-events: none;
+  }
+  body:not(.cp-ignore-rotate) #rotate {
+    display: flex;
+  }
+}
+
+/* Smooth fade & slide for prompt */
+.cp-prompt {
+  transition: opacity 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2), transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  opacity: 0;
+  transform: translate(-50%, 15px) scale(0.92);
+  pointer-events: none;
+}
+.cp-prompt.cp-prompt-visible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+/* Glossy sheen reflection sweeps on hover */
+.cp-btn::after,
+.cp-choice::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+.cp-btn:hover::after,
+.cp-choice:hover::after {
+  animation: cp-shine 0.85s ease-in-out;
+}
+
+@keyframes cp-shine {
+  100% {
+    left: 150%;
+  }
+}
+
+/* Custom premium scrollbars */
+.cp-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.cp-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.cp-scroll::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.45);
+  border-radius: 4px;
+}
+.cp-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.7);
+}
+
