@@ -357,7 +357,7 @@ export class CaseScene extends Phaser.Scene {
     const head = correct ? COLORS_CORRECT : COLORS_WARN
     const next = CASES.find((c) => !Progress.isSolved(c.id))
     const actions = correct
-      ? `${this.ghost('fb-map', t(UI.caseMap))}${this.primary('fb-next', (next ? t(UI.nextFolder) : t(UI.toFinalTest)) + '  →')}`
+      ? `${this.ghost('fb-next', (next ? t(UI.nextFolder) : t(UI.toFinalTest)) + '  →')}${this.primary('fb-map', t(UI.caseMap))}`
       : `${this.ghost('fb-other', t(UI.otherCase))}${this.primary('fb-retry', t(UI.retry))}`
 
     const modal = document.createElement('div')
@@ -409,7 +409,7 @@ export class CaseScene extends Phaser.Scene {
       }
       return
     }
-    const fb = this.root.querySelector('#fb-next, #fb-retry') as HTMLButtonElement | null
+    const fb = this.root.querySelector('#fb-map, #fb-retry') as HTMLButtonElement | null
     if (fb) {
       if (e.key === 'Enter') {
         e.preventDefault()
