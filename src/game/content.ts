@@ -36,10 +36,10 @@ export const CASES: CaseData[] = [
         kind: 'bullets',
         items: [
           loc(
-            '🌧️ Η εποχή βροχής ξεκινά ~3 εβδομάδες αργότερα σε σχέση με πριν 20 χρόνια',
-            '🌧️ The rainy season starts ~3 weeks later than 20 years ago',
+            '🌧️ Η περίοδος των βροχών ξεκινά περίπου 3 εβδομάδες αργότερα σε σχέση με 20 χρόνια πριν.',
+            '🌧️ The rainy season starts about 3 weeks later than 20 years ago.',
           ),
-          loc('🌡️ Θερμοκρασία καλοκαιριού: +2,3°C', '🌡️ Summer temperature: +2.3°C'),
+          loc('🌡️ Μέση θερμοκρασία καλοκαιριού +2,3°C', '🌡️ Average summer temperature +2.3°C'),
           loc('🌽 Παραγωγή καλαμποκιού: −34% σε 10 χρόνια', '🌽 Maize production: −34% over 10 years'),
           loc('🏙️ Πληθυσμός περιοχής: −18% λόγω μετανάστευσης', '🏙️ Regional population: −18% due to migration'),
           loc(
